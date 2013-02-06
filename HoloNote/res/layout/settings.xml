@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        
+	    <TextView android:id="@+id/theme_question"
+	        style="@style/padded_text_content"
+	        android:layout_weight="1"
+	        android:layout_width="0dp"
+	        android:text="@string/theme_question"/>
+	    
+	    <CheckBox android:id="@+id/theme_checker"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    
+    <ImageView style="@style/separator"  android:contentDescription="@string/separator" />
+    
+    <TextView android:id="@+id/backup"
+        style="@style/padded_text_content"
+        android:text="@string/backup_notes"
+        android:clickable="true"
+        android:onClick="backupNotes"/>
+
+    <TextView android:id="@+id/backup_time_text"
+        style="@style/padded_text"
+        android:layout_marginTop="-10dp"
+        android:text="@string/backup_time_default_text" />
+
+    <ImageView style="@style/separator" android:contentDescription="@string/separator" />
+
+    <TextView android:id="@+id/recover"
+        style="@style/padded_text_content"
+        android:text="@string/recover_notes"
+        android:clickable="true"
+        android:onClick="recoverNotes"/>
+
+    <ImageView style="@style/separator"  android:contentDescription="@string/separator" />
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+	    
+	    <TextView android:id="@+id/auto_backup"
+	        style="@style/padded_text_content"
+	        android:layout_weight="1"
+	        android:layout_width="0dp"
+	        android:text="@string/auto_backup"/>
+	    
+	    <CheckBox android:id="@+id/auto_backup_checker"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+        
+    </LinearLayout>
+    
+    <ImageView style="@style/separator"  android:contentDescription="@string/separator" />
+    
+ 	<LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        
+	    <TextView android:id="@+id/sort"
+	        style="@style/padded_text_content"
+	        android:layout_weight="1"
+	        android:layout_width="0dp"
+	        android:text="@string/sort_by_priority"/>
+	    
+	    <CheckBox android:id="@+id/sort_checker"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    
+    <ImageView style="@style/separator" android:contentDescription="@string/separator" />
+    
+</LinearLayout>

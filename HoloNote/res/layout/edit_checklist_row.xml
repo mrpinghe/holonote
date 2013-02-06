@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:onClick="editChecklistItem">
+
+    <TextView android:id="@+id/edit_checklist_item"
+        style="@style/padded_text_content"
+        android:layout_weight="1"
+	    android:layout_width="0dp"/>
+
+	<ImageButton android:id="@+id/delete_checklist_item"
+	    style="@style/img_button"
+	    android:src="@drawable/ic_menu_close_clear_cancel"
+	    android:contentDescription="@string/delete_checklist_item"
+	    android:onClick="delChecklistItem"/>
+    
+</LinearLayout>

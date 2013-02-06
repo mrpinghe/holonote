@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+	<TextView android:id="@+id/red_selector"
+	    style="@style/title_text_drawable_left"
+	    android:text="@string/priority_red"
+	    android:drawableLeft="@drawable/ic_list_red" />
+        
+	<TextView android:id="@+id/orange_selector"
+	    style="@style/title_text_drawable_left"
+	    android:text="@string/priority_orange"
+	    android:drawableLeft="@drawable/ic_list_orange" />
+		
+	<TextView android:id="@+id/yellow_selector"
+	    style="@style/title_text_drawable_left"
+	    android:text="@string/priority_yellow"
+	    android:drawableLeft="@drawable/ic_list_yellow"/>
+
+	<TextView android:id="@+id/green_selector"
+	    style="@style/title_text_drawable_left"
+	    android:text="@string/priority_green"
+	    android:drawableLeft="@drawable/ic_list_green"/>
+
+	<TextView android:id="@+id/white_selector"
+	    style="@style/title_text_drawable_left"
+	    android:text="@string/priority_white"
+	    android:drawableLeft="@drawable/ic_list_white"/>
+        
+</LinearLayout>

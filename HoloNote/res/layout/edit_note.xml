@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <EditText android:id="@+id/edit_note_title"
+        style="@style/title_text_bold"
+        android:hint="@string/add_title" />
+    
+    <EditText android:id="@+id/edit_note_body"
+        style="@style/content_text_wide"
+        android:layout_height="match_parent"
+	    android:inputType="textMultiLine"
+	    android:hint="@string/add_note" />
+    
+    <!-- added this list view so note and checklist can use the same ListActivity class. completely useless -->
+    <ListView android:id="@android:id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+</LinearLayout>
+
+

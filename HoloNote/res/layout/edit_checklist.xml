@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <EditText android:id="@+id/edit_note_title"
+        style="@style/title_text_bold"
+        android:hint="@string/add_title"
+   	    android:layout_alignParentTop="true"/>
+    
+    <!-- add new item (stick to the bottom) -->
+    <RelativeLayout android:id="@+id/add_new_item_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton android:id="@+id/add_new_item_button"
+            style="@style/img_button"
+            android:src="@drawable/ic_menu_add"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/add_new_item"
+            android:onClick="addChecklistItem"
+            android:layout_alignParentRight="true"/>
+
+        <EditText android:id="@+id/new_checklist_item_text"
+            style="@style/content_text_wide"
+            android:hint="@string/add_new_item"
+            android:layout_toLeftOf="@id/add_new_item_button"/>
+        
+    </RelativeLayout>
+    
+	<ListView android:id="@android:id/list"
+        style="@style/list_view"
+        android:layout_below="@id/edit_note_title"
+        android:layout_above="@id/add_new_item_section"/>
+	
+</RelativeLayout>

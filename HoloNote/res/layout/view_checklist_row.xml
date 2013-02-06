@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- overwrite textSize style -->
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/show_checklist_item"
+    style="@style/padded_text_content_drawable_left"
+    android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"/>
