@@ -5,12 +5,20 @@
 
     <item android:id="@+id/menu_new"
 		android:icon="@drawable/ic_menu_add"
-		android:title="@string/new_note"
+		android:title="@string/menu_new_note"
 		android:showAsAction="ifRoom" />
     
     <item android:id="@+id/menu_settings"
 		android:icon="@drawable/ic_menu_preferences"
-		android:title="@string/settings"
+		android:title="@string/menu_settings"
 		android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/menu_backup"
+        android:title="@string/menu_backup_notes"
+        android:showAsAction="never|withText" />
+    
+    <item android:id="@+id/menu_restore"
+        android:title="@string/menu_restore_notes"
+        android:showAsAction="never|withText" />
     
 </menu>

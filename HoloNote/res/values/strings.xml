@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">PingNote</string>
+    <string name="app_name">HoloNote</string>
     <string name="app_name_display">Holo Note</string>
-    <string name="add_title">Add a title</string>
-    <string name="add_note">Write your note</string>
-    <string name="no_notes">You don\'t have any note yet :(</string>
-    <string name="new_note">New</string>
-    <string name="edit_note">Edit</string>
-    <string name="delete_note">Delete</string>
-    <string name="save_note">Save</string>
-    <string name="cancel_op">Cancel</string>
-    <string name="add_new_item">Add an item</string>
-    <string name="delete_checklist_item">Delete this item</string>
-    <string name="delete_all_checked">Delete checked</string>
-    <string name="uncheck_all">Uncheck all</string>
-    <string name="item_content_here">Delete if emtpy</string>
-    <string name="settings">Settings</string>
-    <string name="theme_question">Use light theme</string>
-    <string name="separator">separator</string>
-    <string name="backup_notes">Back up all to SD</string>
-    <string name="recover_notes">Recover all from SD</string>
-    <string name="auto_backup">Back up daily (at 3am)</string>
-    <string name="backup_time_default_text">no backup yet</string>
+    
+	<!-- Placeholders/hints/alternative text -->
+    <string name="hint_add_title">Add a title</string>
+    <string name="hint_add_note">Write your note</string>
+    <string name="alt_text_no_notes">You don\'t have any note yet :(</string>
+    <string name="hint_add_new_item">Add an item</string>
+    <string name="hint_edit_item">Delete if emtpy</string>
+    
+   	<!-- menu items -->
+    <string name="menu_new_note">New</string>
+    <string name="menu_edit_note">Edit</string>
+    <string name="menu_delete_note">Delete</string>
+    <string name="menu_save_note">Save</string>
+    <string name="menu_delete_all_checked">Delete checked</string>
+    <string name="menu_uncheck_all">Uncheck all</string>
+    <string name="menu_backup_notes">Back up</string>
+    <string name="menu_restore_notes">Restore</string>
+    <string name="menu_settings">Settings</string>
+    
+    <!-- Dialog -->
+    <string name="dialog_edit_button_text">Edit</string>
+    <string name="dialog_cancel_button_text">Cancel</string>
+    
+    <!-- title and list item in dialog -->
     <string name="sel_priority">Select priority</string>
-    <string name="sort_by_priority">Sort by priority</string>
     <string name="priority_indicator">Priority Indicator</string>
     <string name="priority_red">1 - RED</string>
     <string name="priority_orange">2 - ORANGE</string>
     <string name="priority_yellow">3 - YELLOW</string>
     <string name="priority_green">4 - GREEN</string>
     <string name="priority_white">5 - WHITE</string>
+    
+    <!-- preferences -->
+    <string name="pref_light_theme_title">App theme</string>
+    <string name="pref_light_theme_sum_on">Holo Light</string>
+    <string name="pref_light_theme_sum_off">Holo Dark (default)</string>
+    <string name="pref_auto_backup_title">Back up daily</string>
+    <string name="pref_auto_backup_sum_default">Last backup: Never</string>
+    <string name="pref_sort_priority_title">Sort</string>
+    <string name="pref_sort_priority_sum_on">By priority</string>
+    <string name="pref_sort_priority_sum_off">By date created</string>
+    
+    <!-- Image content descriptions -->
+    <string name="img_desc_list_accent">priority indicator</string>
+    <string name="img_desc_delete_checklist_item">delete this item</string>
+    <string name="img_desc_add_new_item">add new item</string>
     
 </resources>

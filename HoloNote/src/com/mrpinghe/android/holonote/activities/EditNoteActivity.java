@@ -43,11 +43,11 @@ public class EditNoteActivity extends ListActivity implements HoloNoteDialogHost
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+		Util.setPrefTheme(this);
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "Initializing DB adapter");
         mAdapter = new DatabaseAdapter(this);
         mAdapter.open();
-		Util.setPrefTheme(this);
         // if no ID or type is initialized, this will go up one level
 		this.initViewOrGoUp(savedInstanceState);
         Log.i(LOG_TAG, "Edit note view created");

@@ -45,9 +45,9 @@ public class Const {
 
 	// preference related
 	public static final String GLOBAL_PREF_FILE = "Global";
-	public static final String IS_LIGHT_THEME = "is_light_theme";
-	public static final String IS_SORT_BY_PRIORITY = "is_sort_by_priority";
-	public static final String IS_BACKUP_AUTO = "is_backup_auto";
+	public static final String PREF_LIGHT_THEME = "pref_light_theme";
+	public static final String PREF_SORT_PRIORITY = "pref_sort_priority";
+	public static final String PREF_AUTO_BACKUP = "pref_auto_backup";
 	
 	// file system related
 	public static final String EXT_DIR = Environment.getExternalStorageDirectory() + File.separator + "Holo Note";

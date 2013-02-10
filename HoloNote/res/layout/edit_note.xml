@@ -6,13 +6,13 @@
 
     <EditText android:id="@+id/edit_note_title"
         style="@style/title_text_bold"
-        android:hint="@string/add_title" />
+        android:hint="@string/hint_add_title" />
     
     <EditText android:id="@+id/edit_note_body"
         style="@style/content_text_wide"
         android:layout_height="match_parent"
 	    android:inputType="textMultiLine"
-	    android:hint="@string/add_note" />
+	    android:hint="@string/hint_add_note" />
     
     <!-- added this list view so note and checklist can use the same ListActivity class. completely useless -->
     <ListView android:id="@android:id/list"

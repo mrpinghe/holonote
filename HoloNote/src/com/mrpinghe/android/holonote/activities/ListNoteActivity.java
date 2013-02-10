@@ -1,12 +1,17 @@
 package com.mrpinghe.android.holonote.activities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,12 +20,14 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.mrpinghe.android.holonote.R;
+import com.mrpinghe.android.holonote.fragments.HoloNoteDialog;
 import com.mrpinghe.android.holonote.helpers.Const;
 import com.mrpinghe.android.holonote.helpers.DatabaseAdapter;
 import com.mrpinghe.android.holonote.helpers.NoteCursorAdapter;
 import com.mrpinghe.android.holonote.helpers.Util;
+import com.mrpinghe.android.holonote.interfaces.HoloNoteDialogHost;
 
-public class ListNoteActivity extends ListActivity {
+public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost {
 
 	private static final String LOG_TAG = "ListNoteActivity";
 
@@ -33,8 +40,8 @@ public class ListNoteActivity extends ListActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		Util.setPrefTheme(this);
+		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.list_notes);
 		
         Log.i(LOG_TAG, "Creating DB adapter");		
@@ -43,6 +50,7 @@ public class ListNoteActivity extends ListActivity {
 		mAdapter.open();
         Log.i(LOG_TAG, "Populate list");
 		this.populateNoteList();
+		super.onResume();
 	}
 
 	@Override
@@ -61,8 +69,19 @@ public class ListNoteActivity extends ListActivity {
 				return true;
 			case R.id.menu_settings:
 				Log.i(LOG_TAG, "Sending to preference activity");
-				Intent setInt = new Intent(this, PreferenceActivity.class);
+				Intent setInt = new Intent(this, SettingsActivity.class);
 				this.startActivity(setInt);
+				return true;
+			case R.id.menu_backup:
+				Log.i(LOG_TAG, "Backing up all to SD card");
+				new InstantBackupTask().execute(Const.BACKUP);
+				return true;
+			case R.id.menu_restore:
+				Log.i(LOG_TAG, "Restoring all from SD card");
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put(Const.DIALOG_TYPE, Const.RECOVER_ALL);
+				HoloNoteDialog frag = HoloNoteDialog.newInstance(params);
+				frag.show(this.getFragmentManager(), "preference_activity_dialog");
 				return true;
 			default:
 		        Log.i(LOG_TAG, "Default option item select");		
@@ -128,6 +147,72 @@ public class ListNoteActivity extends ListActivity {
 
 		NoteCursorAdapter sca = new NoteCursorAdapter(this, R.layout.list_notes_row, c, fromFields, toViews);
 		this.setListAdapter(sca);
+	}
+
+	/* Back up and restore */
+	
+	private class InstantBackupTask extends AsyncTask<Integer, Void, Integer> {
+		
+		private ProgressDialog dialog;
+		private int op = Const.INVALID_INT;
+		private String opStr = "Unknown";
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			dialog = ProgressDialog.show(ListNoteActivity.this, "Note Backup", "Processing request....", true);
+		}
+
+		@Override
+		protected Integer doInBackground(Integer... args) {
+			
+			
+			if (!Util.isEmpty(args)) {
+				op = args[0];
+			}
+			
+			switch (op) {
+				case Const.BACKUP:
+					Log.i(LOG_TAG, "Backing up database...");
+					opStr = "Back up";
+					return Util.backupDB();
+				case Const.RECOVER:
+					Log.i(LOG_TAG, "Recovering database...");
+					opStr = "Restore";
+					return Util.recoverDB();
+				default:
+					return Const.IO_ERROR;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			super.onPostExecute(result);
+			if (dialog != null && dialog.isShowing()) {
+				dialog.dismiss();
+			}
+			switch (result) {
+				case Const.SUCCESS:
+					Util.alert(ListNoteActivity.this, opStr + " finished");
+					break;
+				default:
+					Util.alert(ListNoteActivity.this, opStr + " failed");
+					break;
+			}
+		}
+	} // External backup task
+
+
+	@Override
+	public void onPositiveClick(Bundle args) {
+		new InstantBackupTask().execute(Const.RECOVER);
+		Log.i(LOG_TAG, "Positive click callback received for recovering notes");
+	}
+
+	@Override
+	public void onNegativeClick(Bundle args) {
+		int dialogType = args.getInt(Const.DIALOG_TYPE);
+		Log.i(LOG_TAG, "Negative click callback received for dialog type " + dialogType);
 	}
 
 }

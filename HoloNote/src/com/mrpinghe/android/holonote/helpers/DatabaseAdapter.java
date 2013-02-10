@@ -342,7 +342,6 @@ public class DatabaseAdapter {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(LOG_TAG, "Version updated from " + oldVersion + " to " + newVersion);
-			db.execSQL("alter table " + CORES_TABLE + " add " + PRIORITY_COL + " integer default " + Const.LEVEL_DEFAULT);
 			Log.i(LOG_TAG, "priority is added");
 		}
 		

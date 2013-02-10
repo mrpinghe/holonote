@@ -37,6 +37,7 @@ public class ViewNoteActivity extends ListActivity implements HoloNoteDialogHost
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Util.setPrefTheme(this);
 		super.onCreate(savedInstanceState);
 		Log.i(LOG_TAG, "initiating adapter");
 		mAdapter = new DatabaseAdapter(this);
@@ -52,7 +53,6 @@ public class ViewNoteActivity extends ListActivity implements HoloNoteDialogHost
 			mNoteId = savedState == null || !(savedState instanceof Long) ? Const.INVALID_LONG : (Long) savedState;
 			Log.i(LOG_TAG, "Nothing in the intent, and mNoteId in saved instance state is: " + mNoteId);
 		}
-		Util.setPrefTheme(this);
 		this.setContentView(R.layout.view_note);
 		// note display is in onResume
 		this.displayNoteOrGoUp();

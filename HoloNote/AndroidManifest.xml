@@ -17,7 +17,7 @@
         </activity>
         <activity android:name=".activities.EditNoteActivity"/>
         <activity android:name=".activities.ViewNoteActivity"/>
-        <activity android:name=".activities.PreferenceActivity"/>
+        <activity android:name="com.mrpinghe.android.holonote.activities.SettingsActivity"/>
         <receiver android:name=".receivers.AlarmReceiver" android:process=":holoNoteAutobackup"></receiver>
     </application>
 

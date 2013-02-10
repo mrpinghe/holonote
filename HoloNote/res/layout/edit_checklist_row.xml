@@ -14,7 +14,7 @@
 	<ImageButton android:id="@+id/delete_checklist_item"
 	    style="@style/img_button"
 	    android:src="@drawable/ic_menu_close_clear_cancel"
-	    android:contentDescription="@string/delete_checklist_item"
+	    android:contentDescription="@string/img_desc_delete_checklist_item"
 	    android:onClick="delChecklistItem"/>
     
 </LinearLayout>

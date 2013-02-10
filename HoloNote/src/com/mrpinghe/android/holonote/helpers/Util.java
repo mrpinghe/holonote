@@ -10,6 +10,7 @@ import java.util.Collection;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -43,20 +44,20 @@ public class Util {
 	}
 	
 	public static void alert(Context ctx, String msg) {
-    	Toast toast = Toast.makeText(ctx, msg, Toast.LENGTH_SHORT);
+    	Toast toast = Toast.makeText(ctx, msg, Toast.LENGTH_LONG);
     	toast.show();
     }
 	
 	public static void setPrefTheme(Context ctx) {
-		SharedPreferences pref = ctx.getSharedPreferences(Const.GLOBAL_PREF_FILE, Context.MODE_PRIVATE);
-		if (pref.getBoolean(Const.IS_LIGHT_THEME, false)) {
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+		if (pref.getBoolean(Const.PREF_LIGHT_THEME, false)) {
 			ctx.setTheme(android.R.style.Theme_Holo_Light);
 		}
 	}
 	
 	public static boolean isSortByPriority(Context ctx) {
-		SharedPreferences pref = ctx.getSharedPreferences(Const.GLOBAL_PREF_FILE, Context.MODE_PRIVATE);
-		return pref.getBoolean(Const.IS_SORT_BY_PRIORITY, false);
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return pref.getBoolean(Const.PREF_SORT_PRIORITY, false);
 	}
 
 	public static int recoverDB() {

@@ -6,7 +6,7 @@
     
 	<EditText android:id="@+id/edit_checklist_item"
 	    style="@style/content_text_wide"
-        android:hint="@string/item_content_here"/>
+        android:hint="@string/hint_edit_item"/>
 	
 	<LinearLayout android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
@@ -14,11 +14,11 @@
 	    
 	    <Button android:id="@+id/button_edit"
 	        style="@style/h_equal"
-	        android:text="@string/edit_note"/>
+	        android:text="@string/dialog_edit_button_text"/>
 	    
 	    <Button android:id="@+id/button_cancel"
 	        style="@style/h_equal"
-	        android:text="@string/cancel_op"/>
+	        android:text="@string/dialog_cancel_button_text"/>
 	    
 	</LinearLayout>
     

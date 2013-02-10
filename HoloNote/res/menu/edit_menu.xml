@@ -3,7 +3,7 @@
 
     <item android:id="@+id/menu_save"
         android:icon="@drawable/ic_menu_save"
-        android:title="@string/save_note"
+        android:title="@string/menu_save_note"
         android:showAsAction="ifRoom"/>
     
     <item android:id="@+id/menu_priority_selector"
