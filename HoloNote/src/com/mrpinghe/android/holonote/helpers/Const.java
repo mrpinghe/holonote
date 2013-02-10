@@ -44,7 +44,6 @@ public class Const {
 	public static final CharSequence CHANGE_PRIORITY_DIALOG_TITLE = "Change Priority";
 
 	// preference related
-	public static final String GLOBAL_PREF_FILE = "Global";
 	public static final String PREF_LIGHT_THEME = "pref_light_theme";
 	public static final String PREF_SORT_PRIORITY = "pref_sort_priority";
 	public static final String PREF_AUTO_BACKUP = "pref_auto_backup";

@@ -36,9 +36,7 @@
     <string name="priority_white">5 - WHITE</string>
     
     <!-- preferences -->
-    <string name="pref_light_theme_title">App theme</string>
-    <string name="pref_light_theme_sum_on">Holo Light</string>
-    <string name="pref_light_theme_sum_off">Holo Dark (default)</string>
+    <string name="pref_light_theme_title">Theme</string>
     <string name="pref_auto_backup_title">Back up daily</string>
     <string name="pref_auto_backup_sum_default">Last backup: Never</string>
     <string name="pref_sort_priority_title">Sort</string>

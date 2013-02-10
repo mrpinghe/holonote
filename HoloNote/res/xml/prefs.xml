@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <SwitchPreference android:key="pref_light_theme"
-        android:title="@string/pref_light_theme_title"
-        android:defaultValue="false"
-        android:summaryOn="@string/pref_light_theme_sum_on"
-        android:summaryOff="@string/pref_light_theme_sum_off"
-        android:switchTextOn="Light"
-        android:switchTextOff="Dark"/>
     <SwitchPreference android:key="pref_auto_backup"
         android:title="@string/pref_auto_backup_title"
         android:defaultValue="true"
+        android:switchTextOn="Yes"
+        android:switchTextOff="No"
         android:summary="@string/pref_auto_backup_sum_default"/>
+    <SwitchPreference android:key="pref_light_theme"
+        android:title="@string/pref_light_theme_title"
+        android:defaultValue="false"
+        android:switchTextOn="Light"
+        android:switchTextOff="Dark"/>
     <SwitchPreference android:key="pref_sort_priority"
         android:title="@string/pref_sort_priority_title"
-        android:defaultValue="false"
+        android:defaultValue="true"
+        android:switchTextOn="Rank"
+        android:switchTextOff="Date"
         android:summaryOn="@string/pref_sort_priority_sum_on"
         android:summaryOff="@string/pref_sort_priority_sum_off"/>
 </PreferenceScreen>
