@@ -6,12 +6,10 @@ import java.util.Map;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +24,7 @@ import com.mrpinghe.android.holonote.helpers.DatabaseAdapter;
 import com.mrpinghe.android.holonote.helpers.NoteCursorAdapter;
 import com.mrpinghe.android.holonote.helpers.Util;
 import com.mrpinghe.android.holonote.interfaces.HoloNoteDialogHost;
+import com.mrpinghe.android.holonote.receivers.HNBroadcastReceiver;
 
 public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost {
 
@@ -74,7 +73,9 @@ public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost
 				return true;
 			case R.id.menu_backup:
 				Log.i(LOG_TAG, "Backing up all to SD card");
-				new InstantBackupTask().execute(Const.BACKUP);
+				Intent bkInt = new Intent(this, HNBroadcastReceiver.class);
+				bkInt.putExtra(Const.BC_METHOD, Const.BACKUP);
+				this.sendBroadcast(bkInt);
 				return true;
 			case R.id.menu_restore:
 				Log.i(LOG_TAG, "Restoring all from SD card");
@@ -149,64 +150,13 @@ public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost
 		this.setListAdapter(sca);
 	}
 
-	/* Back up and restore */
-	
-	private class InstantBackupTask extends AsyncTask<Integer, Void, Integer> {
-		
-		private ProgressDialog dialog;
-		private int op = Const.INVALID_INT;
-		private String opStr = "Unknown";
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			dialog = ProgressDialog.show(ListNoteActivity.this, "Note Backup", "Processing request....", true);
-		}
-
-		@Override
-		protected Integer doInBackground(Integer... args) {
-			
-			
-			if (!Util.isEmpty(args)) {
-				op = args[0];
-			}
-			
-			switch (op) {
-				case Const.BACKUP:
-					Log.i(LOG_TAG, "Backing up database...");
-					opStr = "Back up";
-					return Util.backupDB();
-				case Const.RECOVER:
-					Log.i(LOG_TAG, "Recovering database...");
-					opStr = "Restore";
-					return Util.recoverDB();
-				default:
-					return Const.IO_ERROR;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Integer result) {
-			super.onPostExecute(result);
-			if (dialog != null && dialog.isShowing()) {
-				dialog.dismiss();
-			}
-			switch (result) {
-				case Const.SUCCESS:
-					Util.alert(ListNoteActivity.this, opStr + " finished");
-					break;
-				default:
-					Util.alert(ListNoteActivity.this, opStr + " failed");
-					break;
-			}
-		}
-	} // External backup task
-
 
 	@Override
 	public void onPositiveClick(Bundle args) {
-		new InstantBackupTask().execute(Const.RECOVER);
 		Log.i(LOG_TAG, "Positive click callback received for recovering notes");
+		Intent recInt = new Intent(this, HNBroadcastReceiver.class);
+		recInt.putExtra(Const.BC_METHOD, Const.RECOVER);
+		this.sendBroadcast(recInt);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.mrpinghe.android.holonote.R;
 import com.mrpinghe.android.holonote.helpers.Const;
-import com.mrpinghe.android.holonote.receivers.AlarmReceiver;
+import com.mrpinghe.android.holonote.receivers.HNBroadcastReceiver;
 
 public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
@@ -55,7 +55,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 			Log.d(LOG_TAG, "Auto back up setting changed");
 			boolean isAutoBackupOn = pref.getBoolean(Const.PREF_AUTO_BACKUP, false);
 			// direct to our AlarmReceiver
-			Intent intent = new Intent(this.getActivity(), AlarmReceiver.class);
+			Intent intent = new Intent(this.getActivity(), HNBroadcastReceiver.class);
 			// tell the receiver what we want to do
 			intent.putExtra(Const.BC_METHOD, Const.BACKUP);
 			// set up the pending intent, which will be later feed into AlarmManager
@@ -72,6 +72,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 				todayAt3Am.set(Calendar.SECOND, 0);
 				long oneDay = 1000 * 60 * 60 * 24; // 1000 milliseconds (1 sec) * 60 secs (1 min) * 60 mins (1 hour) * 24 hours
 				am.setRepeating(AlarmManager.RTC_WAKEUP, todayAt3Am.getTimeInMillis(), oneDay, autoBackupIntent);
+				// the backup occurs right after it's turned on as well as everyday at 3am, so we display the last backup time
 				Preference autoBackupPref = this.findPreference(key);
 				autoBackupPref.setSummary("Last Backup: " + Calendar.getInstance().getTime().toString());
 			}

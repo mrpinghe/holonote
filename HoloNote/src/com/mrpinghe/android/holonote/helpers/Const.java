@@ -39,6 +39,7 @@ public class Const {
 	// AsyncTask method type indicator
 	public static final int BACKUP = 1;
 	public static final int RECOVER = 2;
+	public static final int RESET_AUTO_BACKUP = 3;
 	
 	public static final CharSequence EDIT_ITEM_DIALOG_TITLE = "Edit Text";
 	public static final CharSequence CHANGE_PRIORITY_DIALOG_TITLE = "Change Priority";

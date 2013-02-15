@@ -104,7 +104,7 @@ public class HoloNoteDialog extends DialogFragment {
 		dialogBuilder.setTitle(title);
 		dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i(LOG_TAG, "Positive clicked for " + mType);
+				Log.i(LOG_TAG, "Negative clicked for " + mType);
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
                 ((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onNegativeClick(args);
@@ -112,7 +112,7 @@ public class HoloNoteDialog extends DialogFragment {
 		});
 		dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i(LOG_TAG, "Negative clicked for " + mType);
+				Log.i(LOG_TAG, "Positive clicked for " + mType);
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
                 ((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
