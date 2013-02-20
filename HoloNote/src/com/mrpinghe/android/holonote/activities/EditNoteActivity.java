@@ -87,7 +87,7 @@ public class EditNoteActivity extends ListActivity implements HoloNoteDialogHost
 	@Override
 	public void onBackPressed() {
         Log.i(LOG_TAG, "Pressed back button");
-		super.onPause();
+		super.onBackPressed();
 		if (!isViewInitialized) {
 			return;
 		}
@@ -108,7 +108,6 @@ public class EditNoteActivity extends ListActivity implements HoloNoteDialogHost
 				Util.alert(this, "Updated");
 			}
 		}
-		super.onBackPressed();
 	}
 
 	@Override
