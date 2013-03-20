@@ -21,10 +21,10 @@ import com.mrpinghe.android.holonote.R;
 import com.mrpinghe.android.holonote.fragments.HoloNoteDialog;
 import com.mrpinghe.android.holonote.helpers.Const;
 import com.mrpinghe.android.holonote.helpers.DatabaseAdapter;
-import com.mrpinghe.android.holonote.helpers.NoteCursorAdapter;
+import com.mrpinghe.android.holonote.helpers.HoloNoteCursorAdapter;
 import com.mrpinghe.android.holonote.helpers.Util;
 import com.mrpinghe.android.holonote.interfaces.HoloNoteDialogHost;
-import com.mrpinghe.android.holonote.receivers.HNBroadcastReceiver;
+import com.mrpinghe.android.holonote.receivers.HoloNoteBroadcastReceiver;
 
 public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost {
 
@@ -32,29 +32,25 @@ public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost
 
 	private static final String CHOOSE_NOTE_TYPE = "Add New...";
 
-	private static final String[] POSSIBLE_NOTE_TYPES = new String[]{"CHECKLIST", "NOTE"}; // the order is important
+	private static final String[] POSSIBLE_NOTE_TYPES = new String[]{"CHECKLIST", "TEXT"}; // the order is important
 
 	private DatabaseAdapter mAdapter;
 	private int mNoteType = Const.INVALID_INT;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// set themes
 		Util.setPrefTheme(this);
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.list_notes);
-		
-        Log.i(LOG_TAG, "Creating DB adapter");		
 		mAdapter = new DatabaseAdapter(this);
 		// cannot do open readonly here since the first start up will need to create tables
 		mAdapter.open();
-        Log.i(LOG_TAG, "Populate list");
 		this.populateNoteList();
-		super.onResume();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(LOG_TAG, "Inflating options menu");
         this.getMenuInflater().inflate(R.menu.list_menu, menu);
 		return true;
 	}
@@ -73,7 +69,7 @@ public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost
 				return true;
 			case R.id.menu_backup:
 				Log.i(LOG_TAG, "Backing up all to SD card");
-				Intent bkInt = new Intent(this, HNBroadcastReceiver.class);
+				Intent bkInt = new Intent(this, HoloNoteBroadcastReceiver.class);
 				bkInt.putExtra(Const.BC_METHOD, Const.BACKUP);
 				this.sendBroadcast(bkInt);
 				return true;
@@ -105,24 +101,21 @@ public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog = null;
 		switch (id) {
-		case R.id.menu_new:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(CHOOSE_NOTE_TYPE);
-			builder.setItems(POSSIBLE_NOTE_TYPES, new OnClickListener() {
-				
-				public void onClick(DialogInterface dialog, int which) {
-					// TYPE_CHECKLIST = 1, TYPE_NOTE = 2, PNT[0] = Checklist, PNT[1] = Note
-					mNoteType = which + 1;
-					Log.i(LOG_TAG, "After dialog click event, note type is: " + mNoteType);
-			        if (Util.isNoteTypeSupported(mNoteType)) {
+			case R.id.menu_new:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(CHOOSE_NOTE_TYPE);
+				builder.setItems(POSSIBLE_NOTE_TYPES, new OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						// TYPE_CHECKLIST = 1, TYPE_NOTE = 2, PNT[0] = Checklist, PNT[1] = Note
+						mNoteType = which + 1;
 						Intent newNoteInt = new Intent(ListNoteActivity.this, EditNoteActivity.class);
 						newNoteInt.putExtra(DatabaseAdapter.TYPE_COL, mNoteType);
 						ListNoteActivity.this.startActivity(newNoteInt);
-			        }
-				}
-			});
-			dialog = builder.create();
-			break;
+					}
+				});
+				dialog = builder.create();
+				break;
 		}
 		return dialog;
 	}
@@ -131,38 +124,42 @@ public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost
 	protected void onDestroy() {
 		super.onDestroy();
 		if (mAdapter != null) {
-			Log.i(LOG_TAG, "Close adapter");
+			// close the adapter
 			mAdapter.close();
 		}
 	}
 
 	/**
-	 * fill the page with a list of note titles
+	 * Populate the list of notes we have
 	 */
 	private void populateNoteList() {
+		// we only want cores, no content needed
 		Cursor c = mAdapter.getAllNoteCores(this);
 		this.startManagingCursor(c);
-		
+		// used to map between columns and views
 		String[] fromFields = new String[]{DatabaseAdapter.TITLE_COL};
 		int[] toViews = new int[]{R.id.list_note_title_item};
-
-		NoteCursorAdapter sca = new NoteCursorAdapter(this, R.layout.list_notes_row, c, fromFields, toViews);
+		// custom cursor adapter to apply effect to each view if needed
+		HoloNoteCursorAdapter sca = new HoloNoteCursorAdapter(this, R.layout.list_notes_row, c, fromFields, toViews);
 		this.setListAdapter(sca);
 	}
 
 
 	@Override
 	public void onPositiveClick(Bundle args) {
-		Log.i(LOG_TAG, "Positive click callback received for recovering notes");
-		Intent recInt = new Intent(this, HNBroadcastReceiver.class);
-		recInt.putExtra(Const.BC_METHOD, Const.RECOVER);
-		this.sendBroadcast(recInt);
+		// Dialog host callback
+		int dialogType = args.getInt(Const.DIALOG_TYPE);
+		if (dialogType == Const.RECOVER_ALL) {
+			Intent recInt = new Intent(this, HoloNoteBroadcastReceiver.class);
+			recInt.putExtra(Const.BC_METHOD, Const.RECOVER);
+			this.sendBroadcast(recInt);
+		}
 	}
 
 	@Override
 	public void onNegativeClick(Bundle args) {
-		int dialogType = args.getInt(Const.DIALOG_TYPE);
-		Log.i(LOG_TAG, "Negative click callback received for dialog type " + dialogType);
+		// don't do anything with negative click
+//		int dialogType = args.getInt(Const.DIALOG_TYPE);
 	}
 
 }

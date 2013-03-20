@@ -24,6 +24,7 @@ public class HoloNoteDialog extends DialogFragment {
 	private static final String LOG_TAG = "HoloNoteDialog";
 	private int mType = Const.INVALID_INT;
 	private long mItemId = Const.INVALID_LONG;
+	private Object mHost = null;
 	
 	/**
 	 * Using factory design pattern to create a new custom DialogFragment.
@@ -36,23 +37,19 @@ public class HoloNoteDialog extends DialogFragment {
 	 */
 	public static HoloNoteDialog newInstance(Map<String, Object> params) {
 
-		Log.i(LOG_TAG, "Getting a new instance with " + (params == null ? 0 : params.size()) + " params");
 		HoloNoteDialog frag = new HoloNoteDialog();
 		Bundle args = new Bundle();
 		if (params.get(Const.DIALOG_TYPE) != null) {
-			int type = (Integer) params.get(Const.DIALOG_TYPE);
-			Log.i(LOG_TAG, "Return new dialog of type " + type);
-			args.putInt(Const.DIALOG_TYPE, type);
+			args.putInt(Const.DIALOG_TYPE, (Integer) params.get(Const.DIALOG_TYPE));
 		}
 		if (params.get(DatabaseAdapter.ID_COL) != null) {
-			long id = (Long) params.get(DatabaseAdapter.ID_COL);
-			Log.i(LOG_TAG, "ID argument for dialog " + id);
-			args.putLong(DatabaseAdapter.ID_COL, id);
+			args.putLong(DatabaseAdapter.ID_COL, (Long) params.get(DatabaseAdapter.ID_COL));
 		}
 		if (params.get(DatabaseAdapter.TEXT_COL) != null) {
-			String text = (String) params.get(DatabaseAdapter.TEXT_COL);
-			Log.i(LOG_TAG, "Text argument for dialog " + text);
-			args.putString(DatabaseAdapter.TEXT_COL, text);
+			args.putString(DatabaseAdapter.TEXT_COL, (String) params.get(DatabaseAdapter.TEXT_COL));
+		}
+		if (params.get(Const.FRAG_RSRC_ID) != null) {
+			args.putInt(Const.FRAG_RSRC_ID, (Integer) params.get(Const.FRAG_RSRC_ID));
 		}
 		frag.setArguments(args);
 		return frag;
@@ -62,7 +59,13 @@ public class HoloNoteDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		
 		mType = this.getArguments().getInt(Const.DIALOG_TYPE);
-		Log.i(LOG_TAG, "Creating a new dialog of type " + mType);
+		int fragId = this.getArguments().getInt(Const.FRAG_RSRC_ID);
+		if (fragId != 0) {
+			mHost = this.getActivity().getFragmentManager().findFragmentById(fragId);
+		}
+		else {
+			mHost = this.getActivity();
+		}
 		String title = null;
 		
 		switch (mType) {
@@ -99,12 +102,10 @@ public class HoloNoteDialog extends DialogFragment {
 	 * @return
 	 */
 	private Dialog createConfirmDialog(String title) {
-		Log.i(LOG_TAG, "Build a alert dialog to ask for confirmation with title: " + title);
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getActivity());
 		dialogBuilder.setTitle(title);
 		dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i(LOG_TAG, "Negative clicked for " + mType);
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
                 ((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onNegativeClick(args);
@@ -112,7 +113,6 @@ public class HoloNoteDialog extends DialogFragment {
 		});
 		dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i(LOG_TAG, "Positive clicked for " + mType);
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
                 ((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
@@ -127,7 +127,6 @@ public class HoloNoteDialog extends DialogFragment {
 	 * @return
 	 */
 	private Dialog createEditDialog() {
-		Log.i(LOG_TAG, "Building a custom dialog for editing text");
 		Dialog editDialog = new Dialog(this.getActivity());
 		editDialog.setContentView(R.layout.dialog_edit_item);
 		editDialog.setTitle(Const.EDIT_ITEM_DIALOG_TITLE);
@@ -141,16 +140,14 @@ public class HoloNoteDialog extends DialogFragment {
 		Button editButton = (Button) editDialog.findViewById(R.id.button_edit);
 		editButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(LOG_TAG, "Edit note clicked for: " + mItemId);
 				LinearLayout dialogView = (LinearLayout) v.getParent().getParent();
 				EditText editedText = (EditText) dialogView.findViewById(R.id.edit_checklist_item);
 				
-				Log.i(LOG_TAG, "Setting up args to pass to callback method");
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
 				args.putLong(DatabaseAdapter.ID_COL, mItemId);
 				args.putString(DatabaseAdapter.TEXT_COL, editedText.getText().toString());
-				((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
+				((HoloNoteDialogHost) mHost).onPositiveClick(args);
 				HoloNoteDialog.this.dismiss();
 			}
 		});
@@ -158,10 +155,9 @@ public class HoloNoteDialog extends DialogFragment {
 		Button cancelButton = (Button) editDialog.findViewById(R.id.button_cancel);
 		cancelButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(LOG_TAG, "Cancel operation: " + mType);
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
-				((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onNegativeClick(args);
+				((HoloNoteDialogHost) mHost).onNegativeClick(args);
 				HoloNoteDialog.this.dismiss();
 			}
 		});
@@ -175,62 +171,56 @@ public class HoloNoteDialog extends DialogFragment {
 	 * @return
 	 */
 	private Dialog createPriorityPickerDialog() {
-		Log.i(LOG_TAG, "Building priority picker dialog");
 		Dialog dialog = new Dialog(this.getActivity());
 		dialog.setContentView(R.layout.dialog_change_priority);
 		dialog.setTitle(Const.CHANGE_PRIORITY_DIALOG_TITLE);
 		dialog.findViewById(R.id.red_selector).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(LOG_TAG, "Picked red");
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
 				args.putInt(Const.LEVEL_DRAWABLE, R.drawable.ic_menu_red);
 				args.putInt(DatabaseAdapter.PRIORITY_COL, Const.LEVEL_RED);
-				((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
+				((HoloNoteDialogHost) mHost).onPositiveClick(args);
 				HoloNoteDialog.this.dismiss();
 			}
 		});
 		dialog.findViewById(R.id.orange_selector).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(LOG_TAG, "Picked orange");
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
 				args.putInt(Const.LEVEL_DRAWABLE, R.drawable.ic_menu_orange);
 				args.putInt(DatabaseAdapter.PRIORITY_COL, Const.LEVEL_ORANGE);
-				((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
+				((HoloNoteDialogHost) mHost).onPositiveClick(args);
 				HoloNoteDialog.this.dismiss();
 			}
 		});
 		dialog.findViewById(R.id.yellow_selector).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(LOG_TAG, "Picked yellow");
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
 				args.putInt(Const.LEVEL_DRAWABLE, R.drawable.ic_menu_yellow);
 				args.putInt(DatabaseAdapter.PRIORITY_COL, Const.LEVEL_YELLOW);
-				((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
+				((HoloNoteDialogHost) mHost).onPositiveClick(args);
 				HoloNoteDialog.this.dismiss();
 			}
 		});
 		dialog.findViewById(R.id.green_selector).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(LOG_TAG, "Picked green");
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
 				args.putInt(Const.LEVEL_DRAWABLE, R.drawable.ic_menu_green);
 				args.putInt(DatabaseAdapter.PRIORITY_COL, Const.LEVEL_GREEN);
-				((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
+				((HoloNoteDialogHost) mHost).onPositiveClick(args);
 				HoloNoteDialog.this.dismiss();
 			}
 		});
 		dialog.findViewById(R.id.white_selector).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.i(LOG_TAG, "Picked white");
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
 				args.putInt(Const.LEVEL_DRAWABLE, R.drawable.ic_menu_white);
 				args.putInt(DatabaseAdapter.PRIORITY_COL, Const.LEVEL_WHITE);
-				((HoloNoteDialogHost) HoloNoteDialog.this.getActivity()).onPositiveClick(args);
+				((HoloNoteDialogHost) mHost).onPositiveClick(args);
 				HoloNoteDialog.this.dismiss();
 			}
 		});

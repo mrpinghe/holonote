@@ -20,7 +20,7 @@
         <activity android:name=".activities.EditNoteActivity" android:exported="false"/>
         <activity android:name=".activities.ViewNoteActivity" android:exported="false"/>
         <activity android:name="com.mrpinghe.android.holonote.activities.SettingsActivity" android:exported="false"/>
-        <receiver android:name="com.mrpinghe.android.holonote.receivers.HNBroadcastReceiver" android:process=":holoNoteAutobackup">
+        <receiver android:name="com.mrpinghe.android.holonote.receivers.HoloNoteBroadcastReceiver" android:process=":holoNoteAutobackup">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

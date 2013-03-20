@@ -1,8 +1,6 @@
 package com.mrpinghe.android.holonote.helpers;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -120,7 +118,7 @@ public class DatabaseAdapter {
 		results.moveToFirst();
 		return results;
 	}
-
+	
 	/**
 	 * Create a new note or checklist. Will not create if title is null, message is null, or type is invalid
 	 * 
@@ -129,25 +127,16 @@ public class DatabaseAdapter {
 	 * @param priority 
 	 * @return - the new ID, or {@link Const.INVALID_LONG} if failed
 	 */
-	public long createNote(String title, List<String> message, int type, int priority) {
+	public long createNote(String title, String text, int type, int priority) {
 		Log.i(LOG_TAG, "Creating a new note");
-		// this make sure the message is not null, or empty list, both of which are rare
-		if (!Util.isNoteTypeSupported(type)) {
-			return Const.INVALID_LONG;
-		}
-		
-		if (Util.isEmpty(title) && Util.isEmpty(message)) {
+
+		if (Util.isEmpty(title) && Util.isEmpty(text)) {
 			Log.i(LOG_TAG, "Both title and message are emtpy, no create");
 			return Const.INVALID_LONG;
 		}
 		else if (Util.isEmpty(title)) {
 			title = (new Date()).toLocaleString();
 			Log.i(LOG_TAG, "title is empty. Default to date string");
-		}
-		else if (Util.isEmpty(message) && type == Const.TYPE_NOTE) {
-			message = new ArrayList<String>();
-			message.add("");
-			Log.i(LOG_TAG, "message is empty. Default to empty string");
 		}
 		
 		Log.i(LOG_TAG, "Creating a note of type: " + type);
@@ -160,14 +149,11 @@ public class DatabaseAdapter {
 		Log.i(LOG_TAG, "Core is added. Adding contents now");
 		nid = nid == Const.FAILED_INSERT ? Const.INVALID_LONG : nid;
 		
-		if (nid != Const.INVALID_LONG) {
+		if (nid != Const.INVALID_LONG && !Util.isEmpty(text)) {
 			ContentValues contentVal = new ContentValues();
 			contentVal.put(NOTE_ID_FK_COL, nid);
-			for (String msg : message) {
-				contentVal.put(TEXT_COL, msg);
-				mDatabase.insert(CONTENTS_TABLE, null, contentVal);
-			}
-			Log.i(LOG_TAG, "Total rows of contents added: " + message.size());
+			contentVal.put(TEXT_COL, text);
+			mDatabase.insert(CONTENTS_TABLE, null, contentVal);
 		}
 		return nid;
 	}
@@ -181,7 +167,7 @@ public class DatabaseAdapter {
 	 * @param priority 
 	 * @return - the number of rows updated
 	 */
-	public int updateOrDeleteNote(long noteId, String title, List<String> text, int priority) {
+	public int updateOrDeleteNote(long noteId, String title, String text, int priority) {
 		
 		Log.i(LOG_TAG, "Starting to update note: " + noteId);
 		int type = Const.INVALID_INT;
@@ -199,7 +185,7 @@ public class DatabaseAdapter {
 		int numOfRowsAffected = 0;
 		// this switch only update contents. Title is updated in the end
 		switch (type) {
-			case Const.TYPE_NOTE:
+			case Const.TYPE_TEXT:
 				// delete note or fault tolerance
 				if (Util.isEmpty(title) && Util.isEmpty(text)) {
 					Log.i(LOG_TAG, "Both title and text are emtpy for NOTE, delete " + noteId);
@@ -207,7 +193,7 @@ public class DatabaseAdapter {
 				}
 				else if (Util.isEmpty(text)) {
 					Log.i(LOG_TAG, "There is a title but no text. Default empty string");
-					text.add("");
+					text = "";
 				}
 				else if (Util.isEmpty(title)) {
 					title = (new Date()).toLocaleString();
@@ -215,42 +201,36 @@ public class DatabaseAdapter {
 				}
 				// simply update the assumed only entry in content table for note
 				Log.i(LOG_TAG, "Updating note's body");
-				ContentValues newNoteBody = new ContentValues();
-				newNoteBody.put(TEXT_COL, text.get(0));
-				numOfRowsAffected += mDatabase.update(CONTENTS_TABLE, newNoteBody, NOTE_ID_FK_COL + " = " + noteId, null);
+				ContentValues coontentVals = new ContentValues();
+				coontentVals.put(TEXT_COL, text);
+				numOfRowsAffected += mDatabase.update(CONTENTS_TABLE, coontentVals, NOTE_ID_FK_COL + " = " + noteId, null);
 				break;
 			case Const.TYPE_CHECKLIST:
 				// delete note or fault tolerance
 				if (Util.isEmpty(title)) {
-					if (Util.isEmpty(text) && note.getCount() == 1) {
+					if (note.getCount() == 1) {
 						String str = note.getString(note.getColumnIndexOrThrow(TEXT_COL));
 						if (Util.isEmpty(str)) {
 							Log.i(LOG_TAG, "Nothing exists in this checklist. Delete " + noteId);
 							return this.deleteNote(noteId);
 						}
 					}
-					// title is empty, but there is either at least one valid existing checklist item (note), or there is one in the add item box (text)
+					// title is empty, but there is at least one valid existing checklist item (note)
 					title = (new Date()).toLocaleString();
 					Log.i(LOG_TAG, "There is something in the checklist but no title. Default local date string: " + title);
 				}
 				Log.i(LOG_TAG, "Check if anything to add to checklist");
-				// if it is an checklist, only the text currently in add text box is passed in this method, so it should only loop once
-				for (String str : text) {
-					Log.i(LOG_TAG, "Yes, indeed: " + str);
-					numOfRowsAffected += this.addChecklistItem(str, noteId);
-				}
 				break;
 			default:
 				Log.e(LOG_TAG, "Somehow note " + noteId + " has an invalid type and passed all the previous checks...");
 				break;
 		}
 		
-		Log.i(LOG_TAG, "Update title");
-		ContentValues titleVal = new ContentValues();
-		titleVal.put(TITLE_COL, title);
-		titleVal.put(PRIORITY_COL, priority);
-		numOfRowsAffected += mDatabase.update(CORES_TABLE, titleVal, ID_COL + " = " + noteId, null);
-		Log.i(LOG_TAG, "Total rows of contents added: " + text.size());
+		Log.i(LOG_TAG, "Update core table");
+		ContentValues coreVals = new ContentValues();
+		coreVals.put(TITLE_COL, title);
+		coreVals.put(PRIORITY_COL, priority);
+		numOfRowsAffected += mDatabase.update(CORES_TABLE, coreVals, ID_COL + " = " + noteId, null);
 		return numOfRowsAffected;
 	}
 
@@ -302,12 +282,14 @@ public class DatabaseAdapter {
 		return 0;
 	}
 
-	private long addChecklistItem(String string, long mNoteId) {
-		Log.i(LOG_TAG, "Add [" + string + "] to content for note " + mNoteId);
-		ContentValues values = new ContentValues();
-		values.put(TEXT_COL, string);
-		values.put(NOTE_ID_FK_COL, mNoteId);
-		return mDatabase.insert(CONTENTS_TABLE, null, values);
+	public long addChecklistItem(String string, long mNoteId) {
+		if (mNoteId != Const.INVALID_LONG) {
+			ContentValues values = new ContentValues();
+			values.put(TEXT_COL, string);
+			values.put(NOTE_ID_FK_COL, mNoteId);
+			return mDatabase.insert(CONTENTS_TABLE, null, values);
+		}
+		return Const.INVALID_LONG;
 	}
 
 

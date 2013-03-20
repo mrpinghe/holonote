@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.mrpinghe.android.holonote.R;
 import com.mrpinghe.android.holonote.helpers.Const;
-import com.mrpinghe.android.holonote.receivers.HNBroadcastReceiver;
+import com.mrpinghe.android.holonote.receivers.HoloNoteBroadcastReceiver;
 
 public class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
@@ -55,7 +55,7 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 			Log.d(LOG_TAG, "Auto back up setting changed");
 			boolean isAutoBackupOn = pref.getBoolean(Const.PREF_AUTO_BACKUP, false);
 			// direct to our AlarmReceiver
-			Intent intent = new Intent(this.getActivity(), HNBroadcastReceiver.class);
+			Intent intent = new Intent(this.getActivity(), HoloNoteBroadcastReceiver.class);
 			// tell the receiver what we want to do
 			intent.putExtra(Const.BC_METHOD, Const.BACKUP);
 			// set up the pending intent, which will be later feed into AlarmManager

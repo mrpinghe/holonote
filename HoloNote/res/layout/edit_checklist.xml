@@ -21,7 +21,6 @@
             android:src="@drawable/ic_menu_add"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/img_desc_add_new_item"
-            android:onClick="addChecklistItem"
             android:layout_alignParentRight="true"/>
 
         <EditText android:id="@+id/new_checklist_item_text"

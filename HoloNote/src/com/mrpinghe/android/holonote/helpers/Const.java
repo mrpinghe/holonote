@@ -10,7 +10,7 @@ public class Const {
 
 	// note types
 	public static final int TYPE_CHECKLIST = 1;
-	public static final int TYPE_NOTE = 2;
+	public static final int TYPE_TEXT = 2;
 
 	// invalid values
 	public static final long INVALID_LONG = -1L;
@@ -70,6 +70,7 @@ public class Const {
 	// Dialog Fragment
 	public static final String DIALOG_TYPE = "dialog_type";
 	public static final String LEVEL_DRAWABLE = "level_drawable";
+	public static final String FRAG_RSRC_ID = "fragment_resource_id";
 	public static final int DELETE_NOTE = 1;
 	public static final int DELETE_CHECKED = 2;
 	public static final int UNCHECK_ALL = 3;

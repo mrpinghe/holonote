@@ -17,7 +17,7 @@ import android.util.Log;
 import com.mrpinghe.android.holonote.helpers.Const;
 import com.mrpinghe.android.holonote.helpers.Util;
 
-public class HNBroadcastReceiver extends BroadcastReceiver {
+public class HoloNoteBroadcastReceiver extends BroadcastReceiver {
 
 	private static final String LOG_TAG = "HNBroadcastReceiver";
 	private Context mCtx;
@@ -50,7 +50,7 @@ public class HNBroadcastReceiver extends BroadcastReceiver {
 				if (isAutoBackupSet) {
 					Log.i(LOG_TAG, "Set up auto backup after boot up");
 					// direct back to this receiver
-					Intent autoBackup = new Intent(mCtx, HNBroadcastReceiver.class);
+					Intent autoBackup = new Intent(mCtx, HoloNoteBroadcastReceiver.class);
 					// tell the receiver what we want to do
 					autoBackup.putExtra(Const.BC_METHOD, Const.BACKUP);
 					// set up the pending intent, which will be later feed into AlarmManager

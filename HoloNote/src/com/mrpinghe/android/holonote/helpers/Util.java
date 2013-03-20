@@ -40,7 +40,7 @@ public class Util {
 	}
 
 	public static boolean isNoteTypeSupported(int noteType) {
-		return noteType == Const.TYPE_NOTE || noteType == Const.TYPE_CHECKLIST;
+		return noteType == Const.TYPE_TEXT || noteType == Const.TYPE_CHECKLIST;
 	}
 	
 	public static void alert(Context ctx, String msg) {

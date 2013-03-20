@@ -14,18 +14,18 @@ import android.widget.TextView;
 
 import com.mrpinghe.android.holonote.R;
 
-public class NoteCursorAdapter extends SimpleCursorAdapter {
+public class HoloNoteCursorAdapter extends SimpleCursorAdapter {
 
 	private static final String LOG_TAG = "NoteCursorAdapter";
 	private final Cursor mCursor;
 	
 	
-	public NoteCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to) {
+	public HoloNoteCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to) {
 		super(context, layout, c, from, to);
 		mCursor = c;
 	}
 
-	public NoteCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
+	public HoloNoteCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
 		super(context, layout, c, from, to, flags);
 		mCursor = c;
 	}

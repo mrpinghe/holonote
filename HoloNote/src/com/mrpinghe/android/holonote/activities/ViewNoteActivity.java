@@ -23,7 +23,7 @@ import com.mrpinghe.android.holonote.R;
 import com.mrpinghe.android.holonote.fragments.HoloNoteDialog;
 import com.mrpinghe.android.holonote.helpers.Const;
 import com.mrpinghe.android.holonote.helpers.DatabaseAdapter;
-import com.mrpinghe.android.holonote.helpers.NoteCursorAdapter;
+import com.mrpinghe.android.holonote.helpers.HoloNoteCursorAdapter;
 import com.mrpinghe.android.holonote.helpers.Util;
 import com.mrpinghe.android.holonote.interfaces.HoloNoteDialogHost;
 
@@ -65,7 +65,7 @@ public class ViewNoteActivity extends ListActivity implements HoloNoteDialogHost
 			case Const.TYPE_CHECKLIST:
 				this.getMenuInflater().inflate(R.menu.view_checklist_menu, menu);
 				break;
-			case Const.TYPE_NOTE:
+			case Const.TYPE_TEXT:
 				this.getMenuInflater().inflate(R.menu.view_menu, menu);
 				break;
 			default:
@@ -83,6 +83,7 @@ public class ViewNoteActivity extends ListActivity implements HoloNoteDialogHost
 			case R.id.menu_edit:
 				Intent i = new Intent(this, EditNoteActivity.class);
 				i.putExtra(DatabaseAdapter.ID_COL, mNoteId);
+				i.putExtra(DatabaseAdapter.TYPE_COL, mNoteType);
 				this.startActivity(i);
 				break;
 			case R.id.menu_delete:
@@ -116,7 +117,7 @@ public class ViewNoteActivity extends ListActivity implements HoloNoteDialogHost
 			ctv.setChecked(!ctv.isChecked());
 			mAdapter.flipCheckedStatus(id, mNoteId, ctv.isChecked());
 			ctv.setPaintFlags(ctv.isChecked() ? ctv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG : ctv.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-			((NoteCursorAdapter) this.getListAdapter()).getCursor().requery();
+			((HoloNoteCursorAdapter) this.getListAdapter()).getCursor().requery();
 		}
 	}
 
@@ -192,7 +193,7 @@ public class ViewNoteActivity extends ListActivity implements HoloNoteDialogHost
 		titleView.setText(noteCursor.getString(noteCursor.getColumnIndexOrThrow(DatabaseAdapter.TITLE_COL)));
 		
 		switch (mNoteType) {
-			case Const.TYPE_NOTE:
+			case Const.TYPE_TEXT:
 				this.startManagingCursor(noteCursor); // the cursor will not be changed
 				TextView bodyView = (TextView) this.findViewById(R.id.show_note_body);
 				// enable scrolling
@@ -203,7 +204,7 @@ public class ViewNoteActivity extends ListActivity implements HoloNoteDialogHost
 				Cursor listCursor = mAdapter.getFullNoteOrNoneById(mNoteId);
 				this.startManagingCursor(listCursor); // all changes to the cursor is over
 				// use empty cursor if there is only title. Create a new list adapter upon creating the activity and each subsequent resume
-				this.setListAdapter(new NoteCursorAdapter(this, R.layout.view_checklist_row, listCursor, 
+				this.setListAdapter(new HoloNoteCursorAdapter(this, R.layout.view_checklist_row, listCursor, 
 						new String[]{DatabaseAdapter.TEXT_COL}, new int[]{R.id.show_checklist_item}));
 				return;
 			default:
