@@ -38,6 +38,17 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 	private int mPriority = Const.LEVEL_DEFAULT;
 	private MenuItem mPriorityPicker = null;
 
+	public static EditChecklistFragment newInstance(Map<String, Object> params) {
+		
+		EditChecklistFragment frag = new EditChecklistFragment();
+		Bundle args = new Bundle();
+		if (params.get(DatabaseAdapter.ID_COL) != null) {
+			args.putLong(DatabaseAdapter.ID_COL, (Long) params.get(DatabaseAdapter.ID_COL));
+		}
+		frag.setArguments(args);
+		
+		return frag;
+	}
 	/* ****************** */
 	/*  lifecycle methods */
 	/* ****************** */
@@ -103,6 +114,14 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 	}
 
 	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		TextView textItem = (TextView) v.findViewById(R.id.edit_checklist_item);
+		String text = textItem.getText().toString();
+		// pop up a dialog
+		this.showDialogFragment(Const.EDIT_ITEM, id, text);
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.edit_menu, menu);
@@ -114,7 +133,7 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menu_save:
-			this.createUpdateOrDelete(false); // use onPause to handle save/update. goUp() would not reflect the correct activity stack
+			this.createUpdateOrDelete(false);
 			return true;
 		case android.R.id.home:
 			this.goUp();
@@ -128,12 +147,6 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 		}
 		
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		Log.i(LOG_TAG, "View: " + v.getId() + " pos: " + position + " id: " + id + " toString: " + v);
-		super.onListItemClick(l, v, position, id);
 	}
 
 	@Override
@@ -180,7 +193,8 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 				else {
 					mAdapter.updateItemContent(itemId, string);
 				}
-				// TODO check if onResume is called
+				// onResume is not called after dialog is dismissed so we requery manually
+				((HoloNoteCursorAdapter) this.getListAdapter()).getCursor().requery();
 				break;
 			case Const.PICK_PRIORITY:
 				int resId = args.getInt(Const.LEVEL_DRAWABLE);
@@ -199,18 +213,6 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 	/* *************** */
 	/*  helper methods */
 	/* *************** */
-	public static EditChecklistFragment newInstance(Map<String, Object> params) {
-		
-		EditChecklistFragment frag = new EditChecklistFragment();
-		Bundle args = new Bundle();
-		if (params.get(DatabaseAdapter.ID_COL) != null) {
-			args.putLong(DatabaseAdapter.ID_COL, (Long) params.get(DatabaseAdapter.ID_COL));
-		}
-		frag.setArguments(args);
-		
-		return frag;
-	}
-
 	/**
 	 * called in the view as an onClick event
 	 * @param v
@@ -235,23 +237,9 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 	}
 
 	/**
-	 * OnListItemClick doesn't work because each item already has a clickable element (ImageButton)
-	 * Therefore, use an onclick event handler
-	 * @param v
-	 */
-	public void showEditDialog(View v) {
-		View candidate = v.findViewById(R.id.edit_checklist_item);
-		if (candidate != null) {
-			TextView textItem = (TextView) candidate;
-			String text = textItem.getText().toString();
-			long itemId = this.getListView().getItemIdAtPosition(this.getListView().getPositionForView(v));
-			// pop up a dialog
-			this.showDialogFragment(Const.EDIT_ITEM, itemId, text);
-		}
-	}
-
-	/**
 	 * delete the checklist item next to the clicked delete button
+	 * 
+	 * TODO not used at this moment, consider using long press and change to Roman's awesome slide delete
 	 * @param v
 	 */
 	public void delChecklistItem(View v) {

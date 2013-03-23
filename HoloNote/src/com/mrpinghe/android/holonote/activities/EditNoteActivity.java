@@ -56,6 +56,8 @@ public class EditNoteActivity extends ListActivity {
 		this.getActionBar().setDisplayShowTitleEnabled(false);
 		return true;
 	}
+	
+	
 //	private static final String LOG_TAG = "EditNoteActivity";
 //	
 //	private DatabaseAdapter mAdapter;
