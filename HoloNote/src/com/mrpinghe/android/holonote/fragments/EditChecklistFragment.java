@@ -65,11 +65,12 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 		
 		Bundle args = this.getArguments();
 		mNoteId = args.getLong(DatabaseAdapter.ID_COL, Const.INVALID_LONG);
-
-		if (mNoteId == Const.INVALID_LONG && savedInstanceState != null) {
+		if (savedInstanceState != null && mNoteId == Const.INVALID_LONG) {
+			// create new note
 			Serializable savedId = savedInstanceState.getSerializable(DatabaseAdapter.ID_COL);
 			mNoteId = (savedId != null && savedId instanceof Long) ? (Long) savedId : Const.INVALID_LONG;
 		}
+
 		// no ID == new checklist
 		this.setHasOptionsMenu(true);
 	}
@@ -235,20 +236,6 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 		this.getListView().setSelection(this.getListAdapter().getCount() - 1);
 		newItemView.setText(null);
 	}
-
-	/**
-	 * delete the checklist item next to the clicked delete button
-	 * 
-	 * TODO not used at this moment, consider using long press and change to Roman's awesome slide delete
-	 * @param v
-	 */
-	public void delChecklistItem(View v) {
-		// although v is actually the button, it has the same position value as its parent, since its parent is the unit of the list view
-		int position = this.getListView().getPositionForView(v);
-		long itemId = this.getListView().getItemIdAtPosition(position);
-		mAdapter.deleteChecklistItem(itemId);
-		((HoloNoteCursorAdapter) this.getListAdapter()).getCursor().requery();
-	}
 	
 	/**
 	 * create a HoloNoteDialog dialogFragment and wait for callbacks
@@ -283,7 +270,8 @@ public class EditChecklistFragment extends ListFragment implements HoloNoteDialo
 	 * If there is no valid note ID, we treat this as a new note, and create it in the database
 	 * If there is a valid note ID, we check if there is a title or a valid item. If yes, we update, and if no, we delete
 	 * For checklist, we just 
-	 * @param forceCreate - if true, even if there is nothing in the note yet, we create a note with date string as title
+	 * @param forceCreate - if true, even if there is nothing in the note yet, we create a note with date string as title.
+	 * Used when adding a new item before having a title
 	 */
 	private void createUpdateOrDelete(boolean forceCreate) {
 		EditText title = (EditText) this.getView().findViewById(R.id.edit_note_title);

@@ -32,7 +32,7 @@ public class ListNoteActivity extends ListActivity implements HoloNoteDialogHost
 
 	private static final String CHOOSE_NOTE_TYPE = "Add New...";
 
-	private static final String[] POSSIBLE_NOTE_TYPES = new String[]{"CHECKLIST", "TEXT"}; // the order is important
+	private static final String[] POSSIBLE_NOTE_TYPES = new String[]{"Checklist", "Text"}; // the order is important
 
 	private DatabaseAdapter mAdapter;
 	private int mNoteType = Const.INVALID_INT;
