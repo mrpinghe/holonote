@@ -38,10 +38,6 @@ public class Util {
 			return obj == null || obj.toString().trim().length() == 0;
 		}
 	}
-
-	public static boolean isNoteTypeSupported(int noteType) {
-		return noteType == Const.TYPE_TEXT || noteType == Const.TYPE_CHECKLIST;
-	}
 	
 	public static void alert(Context ctx, String msg) {
     	Toast toast = Toast.makeText(ctx, msg, Toast.LENGTH_LONG);
