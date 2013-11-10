@@ -17,12 +17,11 @@ import com.mrpinghe.android.holonote.helpers.Util;
 
 public class EditNoteActivity extends Activity {
 
-//	private static final String LOG_TAG = "EditNoteActivity";
-	
 	private int mNoteType = Const.INVALID_INT;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Util.setPrefTheme(this);
 		super.onCreate(savedInstanceState);
 		
 		Bundle req = this.getIntent().getExtras();
