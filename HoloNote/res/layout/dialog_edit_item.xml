@@ -12,14 +12,14 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal">
 	    
-	    <Button android:id="@+id/button_edit"
-	        style="@style/h_equal"
-	        android:text="@string/dialog_edit_button_text"/>
-	    
-	    <Button android:id="@+id/button_cancel"
+	    <Button android:id="@+id/button_ccl"
 	        style="@style/h_equal"
 	        android:text="@string/dialog_cancel_button_text"/>
 	    
+	    <Button android:id="@+id/button_done"
+	        style="@style/h_equal"
+	        android:text="@string/dialog_edit_button_text"/>
+
 	</LinearLayout>
     
 </LinearLayout>

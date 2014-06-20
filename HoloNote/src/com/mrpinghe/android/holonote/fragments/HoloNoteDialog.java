@@ -137,9 +137,10 @@ public class HoloNoteDialog extends DialogFragment {
 		holder.setSelection(itemText.length());
 		
 		// have to initialize listeners here, because configuration in the view file will looks for method in Dialog class
-		Button editButton = (Button) editDialog.findViewById(R.id.button_edit);
+		Button editButton = (Button) editDialog.findViewById(R.id.button_done);
 		editButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				Log.i(LOG_TAG, "Done");
 				LinearLayout dialogView = (LinearLayout) v.getParent().getParent();
 				EditText editedText = (EditText) dialogView.findViewById(R.id.edit_checklist_item);
 				
@@ -152,9 +153,10 @@ public class HoloNoteDialog extends DialogFragment {
 			}
 		});
 		
-		Button cancelButton = (Button) editDialog.findViewById(R.id.button_cancel);
+		Button cancelButton = (Button) editDialog.findViewById(R.id.button_ccl);
 		cancelButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				Log.i(LOG_TAG, "Cancel");
 				Bundle args = new Bundle();
 				args.putInt(Const.DIALOG_TYPE, mType);
 				((HoloNoteDialogHost) mHost).onNegativeClick(args);
