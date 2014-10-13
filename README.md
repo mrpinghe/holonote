@@ -1,4 +1,4 @@
 holonote
 ========
 
-test Android Studio integration
+A note taking app for nobody but me
